@@ -1,0 +1,82 @@
+Binary Tree Preorder Traversal 
+
+Given a binary tree, return the preorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [1,2,3].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode *root) {
+        //morris method
+        vector<int> result;
+        TreeNode* cur;
+        cur = root;
+        
+        while(cur != nullptr)
+        {
+            if(cur->left == nullptr)//empty left subtree
+            {
+                result.push_back(cur->val);
+                cur = cur->right;
+            }
+            else
+            {
+                TreeNode * n = cur->left;
+                while( n->right != nullptr && n->right != cur)
+                {
+                    n = n->right; //find the last node in the left subtree
+                }
+                if(n->right == nullptr)
+                {
+                    result.push_back(cur->val);
+                    n->right = cur;
+                    cur= cur->left;
+                }
+                else
+                {
+                    n->right = nullptr;
+                    cur=cur->right;
+                }
+            }
+        }
+        return result;
+        
+        //method using stack
+        /*vector<int> result;
+        if(root == nullptr) return result;
+        stack<TreeNode*> s;
+        s.push(root);
+        
+        while(!s.empty())
+        {
+            TreeNode *p = s.top();
+            s.pop();
+            result.push_back(p->val);
+            if(p->right!=nullptr)
+                s.push(p->right);
+            if(p->left != nullptr)
+                s.push(p->left);
+        }
+        return result;*/
+        
+        
+    }
+};
