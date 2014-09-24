@@ -1,0 +1,68 @@
+Candy 
+
+There are N children standing in a line. Each child is assigned a rating value.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+What is the minimum candies you must give?
+
+
+
+class Solution {
+public:
+    int candy(vector<int> &ratings) {
+        //time O(n), constant space
+        const int n=ratings.size();
+        if(n<=0) return 0;
+        int deLen=0;//length of the descending sequence
+        int preCandy=1;
+        int MaxInSeq=preCandy;
+        int result = 1;//first child
+
+        for(int i=1;i<n;i++)
+        {
+            if(ratings[i]<ratings[i-1])//descending
+            {
+                deLen++;
+                //the first child in the sequence has the same candy as the prev,
+                //then the prev should be included in the sequence
+                if(deLen==MaxInSeq)
+                    deLen++;
+                result+=deLen;
+                preCandy=1;
+            }
+            else
+            {
+                if(ratings[i]>ratings[i-1])
+                    preCandy++;
+                else
+                    preCandy=1;
+                result+=preCandy;
+                deLen=0;
+                MaxInSeq=preCandy;
+            }
+        }
+        return result;
+        //time O(n), space O(n)
+        /*
+        const int n = ratings.size();
+        vector<int> candy(n, 1);
+        
+        for(int i=1;i<n;i++)
+        {
+            if(ratings[i]>ratings[i-1])
+                candy[i] = candy[i-1]+1;
+        }
+        int result = candy[n-1];
+        for(int i=n-2;i>=0;i--)
+        {
+            if(ratings[i]>ratings[i+1])
+                candy[i] = max(candy[i],candy[i+1]+1);
+            result+= candy[i];
+        }
+        return result;
+        */
+    }
+};
